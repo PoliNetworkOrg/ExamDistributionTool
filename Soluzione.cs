@@ -98,10 +98,10 @@ namespace DistribuisciEsami
             value = variance / tot_days;
         }
 
-        private decimal GetSum(List<double> r1)
+        private static decimal GetSum(List<double> r1)
         {
             decimal r = 0;
-            foreach(var d in r1)
+            foreach (var d in r1)
             {
                 r += (decimal)d;
             }
