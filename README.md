@@ -1,13 +1,13 @@
-#ExamDistributionTool
+# ExamDistributionTool
 
-# Requirements
+## Requirements
 DotNet Core Runtime Required.
 
-# Command line tool
+## Command line tool
 
 Argument: the path of the input file
 
-# Input file format
+## Input file format
 
 Example:
 
