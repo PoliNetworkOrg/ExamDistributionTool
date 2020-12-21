@@ -2,3 +2,15 @@
 .vs/
 
 obj/
+
+bin/Debug/netcoreapp3.1/DistribuisciEsami.deps.json
+
+bin/Debug/netcoreapp3.1/DistribuisciEsami.pdb
+
+bin/Debug/netcoreapp3.1/DistribuisciEsami.runtimeconfig.dev.json
+
+bin/Debug/netcoreapp3.1/DistribuisciEsami.runtimeconfig.json
+
+*.json
+
+*.txt
