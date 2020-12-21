@@ -27,12 +27,17 @@ namespace DistribuisciEsami
 
             foreach (string x in ordine)
             {
-                r += x.ToString() + "\t" + this.dictionary[x].ToString();
+                r += x.ToString() + "\t" + StampaData(this.dictionary[x]);
                 r += "\n";
             }
 
             r = r[0..^1];
             return r;
+        }
+
+        private string StampaData(DateTime dateTime)
+        {
+            return dateTime.Year.ToString().PadLeft(4, '0') + "-" + dateTime.Month.ToString().PadLeft(2, '0') + "-" + dateTime.Day.ToString().PadLeft(2, '0');
         }
 
         private List<string> GetOrdineDegliEsami()
