@@ -31,12 +31,40 @@ namespace DistribuisciEsami
         {
             string nome = GetNomeFromJson(x);
             List<DateTime> date = GetDateTimesFromJson(x);
+            int cfu = GetCfuFromJson(x);
 
-            Esame esame = new Esame(nome, date);
+            Esame esame = new Esame(nome, date, cfu);
             this.dictionary[nome] = esame;
         }
 
-        private List<DateTime> GetDateTimesFromJson(Newtonsoft.Json.Linq.JToken x)
+        internal Esame GetExam(string x)
+        {
+            return this.dictionary[x];
+        }
+
+        private static int GetCfuFromJson(Newtonsoft.Json.Linq.JToken x)
+        {
+            foreach (var x2 in x.Children())
+            {
+                if (x2 is Newtonsoft.Json.Linq.JProperty x3)
+                {
+                    if (x3.Name == "cfu")
+                    {
+                        try
+                        {
+                            return Convert.ToInt32(x3.Value.ToString());
+                        }
+                        catch
+                        {
+                            ;
+                        }
+                    }
+                }
+            }
+            return 1;
+        }
+
+        private static List<DateTime> GetDateTimesFromJson(Newtonsoft.Json.Linq.JToken x)
         {
             foreach (var x2 in x.Children())
             {
@@ -71,7 +99,7 @@ namespace DistribuisciEsami
             return null;
         }
 
-        private string GetNomeFromJson(Newtonsoft.Json.Linq.JToken x)
+        private static string GetNomeFromJson(Newtonsoft.Json.Linq.JToken x)
         {
             foreach (var x2 in x.Children())
             {
