@@ -1,7 +1,7 @@
 # ExamDistributionTool
 
 ## Requirements
-DotNet Core Runtime Required.
+DotNet Core Runtime 5.0 Required.
 
 ## Command line tool
 
