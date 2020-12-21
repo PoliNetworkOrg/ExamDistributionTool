@@ -32,11 +32,9 @@ namespace DistribuisciEsami
                 r.Add(i);
             }
 
-            var r2 = r.ToArray();
-            Array.Sort<decimal>(r2, new Comparison<decimal>(
-                     (i1, i2) => i2.CompareTo(i1)));
+            r.Sort();
 
-            return r2.ToList();
+            return r;
         }
     }
 }
