@@ -85,7 +85,11 @@ namespace DistribuisciEsami
                 r1.Add((int)days);
             }
 
-            value = (decimal)Variance(r1.ToArray());
+            var variance = (decimal)Variance(r1.ToArray());
+
+            decimal tot_days = (decimal)(datetimeInOrdine[datetimeInOrdine.Count - 1] - datetimeInOrdine[0]).TotalDays;
+
+            value = variance / tot_days;
         }
 
         private double Variance(int[] nums)
