@@ -36,16 +36,18 @@ namespace DistribuisciEsami
             return;
         }
 
+        public static Esami esami = null;
+
         private static void Main2(string file)
         {
-            Esami esami = new Esami(file);
+            esami = new Esami(file);
             if (esami == null || esami.IsEmpty())
             {
                 Console.WriteLine("There are no exams");
                 return;
             }
 
-            List<Soluzione> soluzioni = GetSoluzioni(esami);
+            List<Soluzione> soluzioni = GetSoluzioni();
             if (soluzioni == null || soluzioni.Count == 0)
             {
                 Console.WriteLine("No solutions!");
@@ -99,16 +101,16 @@ namespace DistribuisciEsami
             return punteggi;
         }
 
-        private static List<Soluzione> GetSoluzioni(Esami esami)
+        private static List<Soluzione> GetSoluzioni()
         {
             List<string> keys = esami.GetKeys();
 
             List<Soluzione> r = new List<Soluzione>();
-            r.AddRange(GetSoluzioni2(esami, 0, keys, new Soluzione()));
+            r.AddRange(GetSoluzioni2(0, keys, new Soluzione()));
             return r;
         }
 
-        private static List<Soluzione> GetSoluzioni2(Esami esami, int v, List<string> keys, Soluzione soluzione)
+        private static List<Soluzione> GetSoluzioni2(int v, List<string> keys, Soluzione soluzione)
         {
             if (v >= keys.Count)
             {
@@ -120,7 +122,7 @@ namespace DistribuisciEsami
             {
                 Soluzione s1 = soluzione.Clone();
                 s1.dictionary[keys[v]] = d;
-                var r2 = GetSoluzioni2(esami, v + 1, keys, s1);
+                var r2 = GetSoluzioni2(v + 1, keys, s1);
                 if (r2 == null || r2.Count == 0)
                 {
                     r.Add(s1);

@@ -27,7 +27,7 @@ namespace DistribuisciEsami
 
             foreach (string x in ordine)
             {
-                r += x.ToString() + "\t" + StampaData(this.dictionary[x]);
+                r += x.ToString() + "\t" + Program.esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]);
                 r += "\n";
             }
 
@@ -35,7 +35,7 @@ namespace DistribuisciEsami
             return r;
         }
 
-        private string StampaData(DateTime dateTime)
+        private static string StampaData(DateTime dateTime)
         {
             return dateTime.Year.ToString().PadLeft(4, '0') + "-" + dateTime.Month.ToString().PadLeft(2, '0') + "-" + dateTime.Day.ToString().PadLeft(2, '0');
         }
@@ -82,22 +82,34 @@ namespace DistribuisciEsami
 
         internal void CalcolaPunteggio()
         {
-            List<DateTime> datetimeInOrdine = GetDateTimeInOrdine();
-            List<int> r1 = new List<int>();
+            List<Tuple<DateTime, int>> datetimeInOrdine = GetDateTimeInOrdine();
+            List<double> r1 = new List<double>();
             for (int i = 0; i < datetimeInOrdine.Count - 1; i++)
             {
-                var days = (datetimeInOrdine[i + 1] - datetimeInOrdine[i]).TotalDays;
-                r1.Add((int)days);
+                double days = (datetimeInOrdine[i + 1].Item1 - datetimeInOrdine[i].Item1).TotalDays;
+                double points = days * datetimeInOrdine[i + 1].Item2;
+                r1.Add(points);
             }
 
             var variance = (decimal)Variance(r1.ToArray());
 
-            decimal tot_days = (decimal)(datetimeInOrdine[datetimeInOrdine.Count - 1] - datetimeInOrdine[0]).TotalDays;
+            decimal tot_days = GetSum(r1);
 
             value = variance / tot_days;
         }
 
-        private double Variance(int[] nums)
+        private static decimal GetSum(List<double> r1)
+        {
+            decimal r = 0;
+            foreach (var d in r1)
+            {
+                r += (decimal)d;
+            }
+
+            return r;
+        }
+
+        private static double Variance(double[] nums)
         {
             if (nums.Length > 1)
             {
@@ -126,7 +138,7 @@ namespace DistribuisciEsami
             else { return 0.0; }
         }
 
-        private double GetAverage(int[] nums)
+        private static double GetAverage(double[] nums)
         {
             int sum = 0;
 
@@ -146,12 +158,12 @@ namespace DistribuisciEsami
             else { return (double)nums[0]; }
         }
 
-        private List<DateTime> GetDateTimeInOrdine()
+        private List<Tuple<DateTime, int>> GetDateTimeInOrdine()
         {
-            List<DateTime> r = new List<DateTime>();
-            foreach (var x in this.dictionary.Keys)
+            List<Tuple<DateTime, int>> r = new List<Tuple<DateTime, int>>();
+            foreach (string x in this.dictionary.Keys)
             {
-                r.Add(this.dictionary[x]);
+                r.Add(new Tuple<DateTime, int>(this.dictionary[x], Program.esami.GetExam(x).cfu));
             }
 
             r.Sort();
