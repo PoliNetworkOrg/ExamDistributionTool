@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Windows.Forms;
 
 namespace DistribuisciEsami
 {
@@ -10,10 +12,17 @@ namespace DistribuisciEsami
         {
             if (args.Length > 0)
             {
+                var OPFD = new CommonOpenFileDialog();
+                OPFD.Title = "Seleziona il file.";
+                CommonFileDialogResult result = CommonFileDialogResult.None;
+                while (result != CommonFileDialogResult.Ok) {
+                    result = OPFD.ShowDialog();
+                }
+
                 string file = null;
                 try
                 {
-                    file = File.ReadAllText(args[0]);
+                    file = File.ReadAllText(OPFD.FileName);
                 }
                 catch
                 {
@@ -27,6 +36,10 @@ namespace DistribuisciEsami
                 }
                 else
                 {
+                    DialogResult DR = MessageBox.Show("Se hai formattato il testo come specificato nel README, allora premi si, se invece l'hai copiato dalla pagina degli esami, premi no.", "Some Title", MessageBoxButtons.YesNo);
+                    if (DR == DialogResult.No)
+                        //Run some kind of additional sub that converts it to the proper format
+                   
                     Main2(file);
                     return;
                 }
