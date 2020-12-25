@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace DistribuisciEsami
 {
@@ -37,9 +38,37 @@ namespace DistribuisciEsami
                 else
                 {
                     DialogResult DR = MessageBox.Show("Se hai formattato il testo come specificato nel README, allora premi si, se invece l'hai copiato dalla pagina degli esami, premi no.", "Some Title", MessageBoxButtons.YesNo);
-                    if (DR == DialogResult.No)
-                        //Run some kind of additional sub that converts it to the proper format
-                   
+                    if (DR == DialogResult.No) {
+                        List<string> JSON = new List<string>();
+                        JSON.Add("[");
+                        string[] lines = File.ReadAllLines(OPFD.FileName);
+                        foreach (string line in lines) {
+                            if (line.Contains("-")) {
+                                if (Array.IndexOf(lines,line) +1 == lines.Length)   
+                                    break; //This line is a new subject, but there's no lines after this so there can't be any dates.
+                                else {
+                                    if (lines[Array.IndexOf(lines, line) + 1].IndexOf("/") != 2)
+                                        continue; //Is the next line NOT a date? Then keep going. This subject has no listed dates.
+                                }
+                                JSON.Add("{");
+                                string subjectname = line.Substring(0, line.IndexOf("-")).Trim();
+                                JSON.Add("\"name\":\""+ subjectname + "\",");
+                                string dateline = "\"date\":[";
+                                string nextline = lines[Array.IndexOf(lines, line) + 1];
+                                while (nextline.IndexOf("/") == 2) {
+                                    //So long as the next line is a date
+                                    dateline += "\"" + nextline.Substring(0,nextline.IndexOf(":")).Replace("/","-") + "\",";
+                                    nextline = lines[Array.IndexOf(lines, nextline) + 1];
+                                }
+                                JSON.Add((dateline + "\"],").Replace("\",\"],","\"],"));        //2lazy to fix it properly
+                                JSON.Add("\"cfu\":\"" + Interaction.InputBox("Quanti CFU vale " +subjectname +"?", "CFU", "") + "\"");
+                                JSON.Add("},");
+                            }
+                        }
+                        JSON.Add("]");
+                        JSON[JSON.Count - 2] = "}";    //Remove the comma from the last closed curly bracket
+                        file = String.Join(Environment.NewLine, JSON);
+                    }
                     Main2(file);
                     return;
                 }
