@@ -56,7 +56,20 @@ namespace DistribuisciEsami
                                 nextline = lines[Array.IndexOf(lines, nextline) + 1];
                             }
                             JSON.Add((dateline + "\"],").Replace("\",\"],", "\"],"));        //2lazy to fix it properly
-                            JSON.Add("\"cfu\":\"" + Interaction.InputBox("Quanti CFU vale " + subjectname + "?", "CFU", "") + "\"");
+                            var isNumeric = false;
+                            int cfunum = 0;
+                            string tmp = "";
+                            while (isNumeric == false) {
+                                tmp = Interaction.InputBox("Quanti CFU vale " + subjectname + "?", "CFU", "");
+                                isNumeric = int.TryParse(tmp, out cfunum);
+                                if (tmp == "")
+                                    isNumeric = true;
+                            }
+                            if (tmp != "")
+                                JSON.Add("\"cfu\":\"" + cfunum + "\"");
+                            else
+                                JSON.Add("\"cfu\":\"" + "\"");
+
                             JSON.Add("},");
                         }
                     }
