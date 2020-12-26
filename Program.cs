@@ -11,28 +11,34 @@ namespace DistribuisciEsami
     {
         private static void Main(string[] args)
         {
-
+            string file = null;
             var OPFD = new CommonOpenFileDialog();
-            OPFD.Title = "Seleziona il file.";
-            CommonFileDialogResult result = CommonFileDialogResult.None;
-            while (result != CommonFileDialogResult.Ok) {
-                result = OPFD.ShowDialog();
+            if (args.Length > 0) {
+                file = args[0];
+            }
+            else {
+                OPFD.Title = "Select the file.";
+                CommonFileDialogResult result = CommonFileDialogResult.None;
+                while (result != CommonFileDialogResult.Ok) {
+                    result = OPFD.ShowDialog();
+                }
+                    file = OPFD.FileName;
             }
 
-            string file = null;
             try {
-                file = File.ReadAllText(OPFD.FileName);
+                file = File.ReadAllText(file);
             }
             catch {
                 ;
             }
 
+
             if (string.IsNullOrEmpty(file)) {
                 Console.WriteLine("There was an error reading the file.");
                 return;
             }
-            else {
-                DialogResult DR = MessageBox.Show("Se hai formattato il testo come specificato nel README, allora premi si, se invece l'hai copiato dalla pagina degli esami, premi no.", "Some Title", MessageBoxButtons.YesNo);
+            else if (args.Length == 0) {
+                DialogResult DR = MessageBox.Show("If you formatted the text file according to the README, then click yes, if you instead copied it from the exam page, click no.", "Import?", MessageBoxButtons.YesNo);
                 if (DR == DialogResult.No) {
                     List<string> JSON = new List<string>();
                     JSON.Add("[");
@@ -60,7 +66,7 @@ namespace DistribuisciEsami
                             int cfunum = 0;
                             string tmp = "";
                             while (isNumeric == false) {
-                                tmp = Interaction.InputBox("Quanti CFU vale " + subjectname + "?", "CFU", "");
+                                tmp = Interaction.InputBox("How many CFUs is " + subjectname + " worth?", "CFU", "");
                                 isNumeric = int.TryParse(tmp, out cfunum);
                                 if (tmp == "")
                                     isNumeric = true;
@@ -77,14 +83,14 @@ namespace DistribuisciEsami
                     JSON[JSON.Count - 2] = "}";    //Remove the comma from the last closed curly bracket
                     file = String.Join(Environment.NewLine, JSON);
                 }
-                Main2(file);
-                return;
             }
+            Main2(file,(args.Length == 0));
+            return;
         }
 
         public static Esami esami = null;
 
-        private static void Main2(string file)
+        private static void Main2(string file, bool isGUI)
         {
             esami = new Esami(file);
             if (esami == null || esami.IsEmpty()) {
@@ -116,7 +122,8 @@ namespace DistribuisciEsami
 
                 Console.WriteLine(".");
             }
-            MessageBox.Show("La soluzione consigliata è:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput() + Environment.NewLine + "Per vedere le altre soluzioni, consulta la console.");
+            if (isGUI)
+                MessageBox.Show("The recommended solution is:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput() + Environment.NewLine + "To view the other solutions, please read the console.");
         }
 
         private static Punteggi CalcolaPunteggi(List<Soluzione> soluzioni)
