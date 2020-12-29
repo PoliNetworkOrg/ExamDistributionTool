@@ -27,7 +27,7 @@ namespace DistribuisciEsamiCommon
 
             foreach (string x in ordine)
             {
-                r.Add( x.ToString() + "\t" + esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]));
+                r.Add(x.ToString() + "\t" + esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]));
             }
 
             return r;

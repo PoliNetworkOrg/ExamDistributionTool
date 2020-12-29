@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DistribuisciEsamiGUI
@@ -22,7 +16,6 @@ namespace DistribuisciEsamiGUI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -57,7 +50,6 @@ namespace DistribuisciEsamiGUI
                 var rispostaCompleta = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
                 if (rispostaCompleta.Item1 != null)
                 {
-
                     listBox1.Items.Clear();
                     var esami2 = esami.GetEsami();
                     listBox1.Items.Add("[NAME]\t\t[CFU]");

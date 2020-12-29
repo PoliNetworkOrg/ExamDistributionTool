@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DistribuisciEsamiCommon;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using DistribuisciEsamiCommon;
-using Microsoft.VisualBasic;
 
 namespace DistribuisciEsami
 {
@@ -29,7 +28,6 @@ namespace DistribuisciEsami
                 }
                 else
                 {
-                    
                     esami = new Esami(file);
                     if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
                     {
@@ -84,7 +82,6 @@ namespace DistribuisciEsami
 
             string r = "";
 
-
             foreach (string x in lists)
             {
                 r += x;
@@ -118,7 +115,6 @@ namespace DistribuisciEsami
             catch {
                 ;
             }
-
 
             if (string.IsNullOrEmpty(file)) {
                 Console.WriteLine("There was an error reading the file.");
@@ -177,9 +173,5 @@ namespace DistribuisciEsami
         */
 
         public static Esami esami = null;
-
-
-
-
     }
 }

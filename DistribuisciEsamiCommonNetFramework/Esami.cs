@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
-
 namespace DistribuisciEsamiCommon
 {
     public class Esami
@@ -104,7 +102,7 @@ namespace DistribuisciEsamiCommon
                                     var x8 = x7.Value.ToString();
                                     var x9 = x8.Split('-');
                                     int anno, mese, giorno;
-                                     
+
                                     if (x9[0].Length == 4) {
                                         anno = Convert.ToInt32(x9[0]);
                                         mese = Convert.ToInt32(x9[1]);
@@ -114,7 +112,7 @@ namespace DistribuisciEsamiCommon
                                         mese = Convert.ToInt32(x9[1]);
                                         giorno = Convert.ToInt32(x9[0]);
                                     }
-                                    
+
                                     DateTime dt = new DateTime(anno, mese, giorno);
                                     r.Add(dt);
                                 }

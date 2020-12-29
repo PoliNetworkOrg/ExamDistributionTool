@@ -13,12 +13,13 @@ namespace DistribuisciEsamiCommon
             this.soluzioni = soluzioni;
             this.punteggi = punteggi;
         }
+
         private static List<Soluzione> GetSoluzioni(Esami esami)
         {
             List<string> keys = esami.GetKeys();
 
             List<Soluzione> r = new List<Soluzione>();
-            r.AddRange(GetSoluzioni2(0, keys, new Soluzione(),esami));
+            r.AddRange(GetSoluzioni2(0, keys, new Soluzione(), esami));
             return r;
         }
 
@@ -47,7 +48,6 @@ namespace DistribuisciEsamiCommon
             return punteggi;
         }
 
-
         private static List<Soluzione> GetSoluzioni2(int v, List<string> keys, Soluzione soluzione, Esami esami)
         {
             if (v >= keys.Count)
@@ -72,7 +72,6 @@ namespace DistribuisciEsamiCommon
             }
             return r;
         }
-
 
         public static Tuple<DistribuisciEsamiCommon.RispostaCompleta, string> CalcolaRisposta(Esami esami)
         {
