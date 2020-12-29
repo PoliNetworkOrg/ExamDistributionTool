@@ -61,7 +61,8 @@ namespace DistribuisciEsami
             {
                 foreach (var p2 in p)
                 {
-                    Console.WriteLine(punteggi.soluzioni[p2].ToConsoleOutput(esami));
+                    string s2 = EsitoCLI_Esami(punteggi.soluzioni[p2].ToConsoleOutput(esami));
+                    Console.WriteLine(s2);
                     Console.WriteLine(punteggi.soluzioni[p2].value);
                     Console.WriteLine("\n");
                     latest = p2;
@@ -74,6 +75,24 @@ namespace DistribuisciEsami
             if (isGUI)
                 MessageBox.Show("The recommended solution is:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput(esami) + Environment.NewLine + "To view the other solutions, please read the console.");
         */
+        }
+
+        private static string EsitoCLI_Esami(List<string> lists)
+        {
+            if (lists == null || lists.Count == 0)
+                return "";
+
+            string r = "";
+
+
+            foreach (string x in lists)
+            {
+                r += x;
+                r += "\n";
+            }
+
+            r = r.Remove(r.Length - 1);
+            return r;
         }
 
         /*

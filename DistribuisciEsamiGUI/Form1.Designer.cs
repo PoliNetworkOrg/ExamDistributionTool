@@ -40,8 +40,10 @@ namespace DistribuisciEsamiGUI
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.HorizontalScrollbar = true;
             this.listBox1.Location = new System.Drawing.Point(12, 70);
             this.listBox1.Name = "listBox1";
+            this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(193, 368);
             this.listBox1.TabIndex = 0;
             // 
@@ -73,6 +75,7 @@ namespace DistribuisciEsamiGUI
             this.textBox1.Location = new System.Drawing.Point(255, 29);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(533, 409);
             this.textBox1.TabIndex = 3;
             // 

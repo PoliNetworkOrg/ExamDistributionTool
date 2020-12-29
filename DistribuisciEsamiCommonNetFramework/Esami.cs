@@ -22,7 +22,7 @@ namespace DistribuisciEsamiCommon
             {
                 jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(file);
             }
-            catch
+            catch (Exception e)
             {
                 ;
             }

@@ -19,19 +19,17 @@ namespace DistribuisciEsamiCommon
             this.dictionary = dictionarycopy;
         }
 
-        public string ToConsoleOutput(Esami esami)
+        public List<string> ToConsoleOutput(Esami esami)
         {
-            string r = "";
+            List<string> r = new List<string>();
 
             List<string> ordine = GetOrdineDegliEsami();
 
             foreach (string x in ordine)
             {
-                r += x.ToString() + "\t" + esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]);
-                r += "\n";
+                r.Add( x.ToString() + "\t" + esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]));
             }
 
-            r = r.Remove(r.Length - 1);
             return r;
         }
 
