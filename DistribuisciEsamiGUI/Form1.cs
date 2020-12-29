@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DistribuisciEsamiCommon;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace DistribuisciEsamiGUI
         {
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             var r = openFileDialog.ShowDialog();
@@ -50,32 +51,41 @@ namespace DistribuisciEsamiGUI
                 var rispostaCompleta = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
                 if (rispostaCompleta.Item1 != null)
                 {
-                    listBox1.Items.Clear();
-                    var esami2 = esami.GetEsami();
-                    listBox1.Items.Add("[NAME]\t\t[CFU]");
-                    foreach (string x in esami2.Keys)
-                    {
-                        string s = "" + esami.GetExam(x).ToStringListBoxGUI();
-                        listBox1.Items.Add(s);
-                    }
-
-                    textBox1.Text = "";
-                    List<string> lines = new List<string>();
-                    foreach (List<int> p in rispostaCompleta.Item1.punteggi.rank)
-                    {
-                        foreach (var p2 in p)
-                        {
-                            lines.AddRange(rispostaCompleta.Item1.soluzioni[p2].ToConsoleOutput(esami));
-                            lines.Add(rispostaCompleta.Item1.soluzioni[p2].value.ToString());
-                            lines.Add("\n");
-                        }
-
-                        lines.Add(".");
-                    }
-
-                    textBox1.Lines = lines.ToArray();
+                    MostraSoluzione(rispostaCompleta.Item1);
+                }
+                else
+                {
+                    MessageBox.Show(rispostaCompleta.Item2);
                 }
             }
+        }
+
+        private void MostraSoluzione(RispostaCompleta rispostaCompleta)
+        {
+            listBox1.Items.Clear();
+            var esami2 = esami.GetEsami();
+            listBox1.Items.Add("[NAME]\t\t[CFU]");
+            foreach (string x in esami2.Keys)
+            {
+                string s = "" + esami.GetExam(x).ToStringListBoxGUI();
+                listBox1.Items.Add(s);
+            }
+
+            textBox1.Text = "";
+            List<string> lines = new List<string>();
+            foreach (List<int> p in rispostaCompleta.punteggi.rank)
+            {
+                foreach (var p2 in p)
+                {
+                    lines.AddRange(rispostaCompleta.soluzioni[p2].ToConsoleOutput(esami));
+                    lines.Add(rispostaCompleta.soluzioni[p2].value.ToString());
+                    lines.Add("\n");
+                }
+
+                lines.Add(".");
+            }
+
+            textBox1.Lines = lines.ToArray();
         }
     }
 }

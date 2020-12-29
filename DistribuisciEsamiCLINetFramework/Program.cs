@@ -54,7 +54,6 @@ namespace DistribuisciEsami
 
         private static void MostraEsito(RispostaCompleta punteggi)
         {
-            int latest = 0;
             foreach (List<int> p in punteggi.punteggi.rank)
             {
                 foreach (var p2 in p)
@@ -63,16 +62,10 @@ namespace DistribuisciEsami
                     Console.WriteLine(s2);
                     Console.WriteLine(punteggi.soluzioni[p2].value);
                     Console.WriteLine("\n");
-                    latest = p2;
                 }
 
                 Console.WriteLine(".");
             }
-
-            /*
-            if (isGUI)
-                MessageBox.Show("The recommended solution is:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput(esami) + Environment.NewLine + "To view the other solutions, please read the console.");
-        */
         }
 
         private static string EsitoCLI_Esami(List<string> lists)
