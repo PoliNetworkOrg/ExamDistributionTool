@@ -1,7 +1,7 @@
 # ExamDistributionTool
 
 ## Requirements
-DotNet Core Runtime 5.0 Required.
+.Net Framework 4.7 Required. https://www.microsoft.com/it-it/download/details.aspx?id=55167
 
 ## Command line tool
 
