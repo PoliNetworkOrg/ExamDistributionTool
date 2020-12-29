@@ -15,14 +15,14 @@ namespace DistribuisciEsamiCommon
         public Esami(string file)
         {
             dictionary = new Dictionary<string, Esame>();
-            object jObject = null;
+            object jObject;
             try
             {
                 jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(file);
             }
             catch (Exception e)
             {
-                ;
+                throw e;
             }
 
             if (jObject == null)

@@ -42,7 +42,16 @@ namespace DistribuisciEsamiGUI
                     return;
                 }
 
-                esami = new DistribuisciEsamiCommon.Esami(filecontent);
+                esami = null;
+                try
+                {
+                    esami = new DistribuisciEsamiCommon.Esami(filecontent);
+                }
+                catch
+                {
+                    ;
+                }
+
                 if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
                 {
                     MessageBox.Show("No exams found in that file. Is it formatted correctly?");

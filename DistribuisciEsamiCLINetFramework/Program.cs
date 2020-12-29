@@ -28,7 +28,16 @@ namespace DistribuisciEsami
                 }
                 else
                 {
-                    esami = new Esami(file);
+                    esami = null;
+                    try
+                    {
+                        esami = new Esami(file);
+                    }
+                    catch
+                    {
+                        ;
+                    }
+
                     if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
                     {
                         Console.WriteLine("There are no exams in that file! Is it formatted correctly?");
