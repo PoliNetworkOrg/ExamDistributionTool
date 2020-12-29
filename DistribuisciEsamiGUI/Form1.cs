@@ -45,7 +45,7 @@ namespace DistribuisciEsamiGUI
                 esami = null;
                 try
                 {
-                    esami = new DistribuisciEsamiCommon.Esami(filecontent);
+                    esami = new Esami(filecontent);
                 }
                 catch
                 {
