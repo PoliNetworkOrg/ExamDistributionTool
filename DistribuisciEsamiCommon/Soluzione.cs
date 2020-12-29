@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DistribuisciEsami
+namespace DistribuisciEsamiCommon
 {
-    internal class Soluzione
+    public class Soluzione
     {
         public Dictionary<string, DateTime> dictionary;
         public decimal value;
@@ -19,7 +19,7 @@ namespace DistribuisciEsami
             this.dictionary = dictionarycopy;
         }
 
-        internal string ToConsoleOutput()
+        public string ToConsoleOutput(Esami esami)
         {
             string r = "";
 
@@ -27,7 +27,7 @@ namespace DistribuisciEsami
 
             foreach (string x in ordine)
             {
-                r += x.ToString() + "\t" + Program.esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]);
+                r += x.ToString() + "\t" + esami.GetExam(x).cfu + "\t" + StampaData(this.dictionary[x]);
                 r += "\n";
             }
 
@@ -70,7 +70,7 @@ namespace DistribuisciEsami
             return r;
         }
 
-        internal Soluzione Clone()
+        public Soluzione Clone()
         {
             Dictionary<string, DateTime> dictionarycopy = new Dictionary<string, DateTime>();
             foreach (var k in this.dictionary.Keys)
@@ -80,9 +80,9 @@ namespace DistribuisciEsami
             return new Soluzione(dictionarycopy);
         }
 
-        internal void CalcolaPunteggio()
+        public void CalcolaPunteggio(Esami esami)
         {
-            List<Tuple<DateTime, int>> datetimeInOrdine = GetDateTimeInOrdine();
+            List<Tuple<DateTime, int>> datetimeInOrdine = GetDateTimeInOrdine(esami);
             List<double> r1 = new List<double>();
             for (int i = 0; i < datetimeInOrdine.Count - 1; i++)
             {
@@ -158,12 +158,12 @@ namespace DistribuisciEsami
             else { return (double)nums[0]; }
         }
 
-        private List<Tuple<DateTime, int>> GetDateTimeInOrdine()
+        private List<Tuple<DateTime, int>> GetDateTimeInOrdine(Esami esami)
         {
             List<Tuple<DateTime, int>> r = new List<Tuple<DateTime, int>>();
             foreach (string x in this.dictionary.Keys)
             {
-                r.Add(new Tuple<DateTime, int>(this.dictionary[x], Program.esami.GetExam(x).cfu));
+                r.Add(new Tuple<DateTime, int>(this.dictionary[x], esami.GetExam(x).cfu));
             }
 
             r.Sort();

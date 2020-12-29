@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Windows.Forms;
 using Microsoft.VisualBasic;
 
 namespace DistribuisciEsami
@@ -10,6 +8,36 @@ namespace DistribuisciEsami
     internal class Program
     {
         private static void Main(string[] args)
+        {
+            if (args.Length > 0)
+            {
+                string file = null;
+                try
+                {
+                    file = File.ReadAllText(args[0]);
+                }
+                catch
+                {
+                    ;
+                }
+
+                if (string.IsNullOrEmpty(file))
+                {
+                    Console.WriteLine("There was an error reading the file.");
+                    return;
+                }
+                else
+                {
+                    Main2(file);
+                    return;
+                }
+            }
+
+            Console.WriteLine("You have to pass the input file as an argument");
+            return;
+        }
+
+        private static void Main3(string[] args)
         {
             string file = null;
             var OPFD = new CommonOpenFileDialog();

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DistribuisciEsami
+
+
+namespace DistribuisciEsamiCommon
 {
-    internal class Esami
+    public class Esami
     {
         private readonly Dictionary<string, Esame> dictionary;
 
@@ -128,7 +130,7 @@ namespace DistribuisciEsami
             dictionary[esame.nome] = esame;
         }
 
-        internal List<string> GetKeys()
+        public List<string> GetKeys()
         {
             List<string> r = new List<string>();
             foreach (var x in dictionary.Keys)
@@ -138,12 +140,12 @@ namespace DistribuisciEsami
             return r;
         }
 
-        internal List<DateTime> GetDateTimes(string v)
+        public List<DateTime> GetDateTimes(string v)
         {
             return this.dictionary[v].dateTimes;
         }
 
-        internal bool IsEmpty()
+        public bool IsEmpty()
         {
             return this.dictionary == null || this.dictionary.Keys.Count == 0;
         }

@@ -3,12 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistribuisciEsami", "DistribuisciEsami.csproj", "{690358A8-4350-4050-B701-6F6A5A085D5C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3476A6AF-45DD-4FBA-B835-F9CA3396A7DE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribuisciEsamiGUI", "DistribuisciEsamiGUI\DistribuisciEsamiGUI.csproj", "{5C106863-1697-4109-B2B3-B649CD971FDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribuisciEsamiCommon", "DistribuisciEsamiCommon\DistribuisciEsamiCommon.csproj", "{B8E1C427-27C7-4CE5-95DA-EA18C2DE8BD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistribuisciEsamiCLI", "DistribuisciEsamiCLI\DistribuisciEsamiCLI.csproj", "{A76AFD83-5C5B-491B-AC77-6AB572F5A576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,10 +20,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{690358A8-4350-4050-B701-6F6A5A085D5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{690358A8-4350-4050-B701-6F6A5A085D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{690358A8-4350-4050-B701-6F6A5A085D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{690358A8-4350-4050-B701-6F6A5A085D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C106863-1697-4109-B2B3-B649CD971FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C106863-1697-4109-B2B3-B649CD971FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C106863-1697-4109-B2B3-B649CD971FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C106863-1697-4109-B2B3-B649CD971FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E1C427-27C7-4CE5-95DA-EA18C2DE8BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E1C427-27C7-4CE5-95DA-EA18C2DE8BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E1C427-27C7-4CE5-95DA-EA18C2DE8BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E1C427-27C7-4CE5-95DA-EA18C2DE8BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76AFD83-5C5B-491B-AC77-6AB572F5A576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76AFD83-5C5B-491B-AC77-6AB572F5A576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76AFD83-5C5B-491B-AC77-6AB572F5A576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76AFD83-5C5B-491B-AC77-6AB572F5A576}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

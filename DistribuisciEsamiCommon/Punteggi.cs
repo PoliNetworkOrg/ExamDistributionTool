@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DistribuisciEsami
+namespace DistribuisciEsamiCommon
 {
-    internal class Punteggi
+    public class Punteggi
     {
         public Dictionary<decimal, List<int>> punteggi;
         public List<List<int>> rank;
@@ -12,7 +12,7 @@ namespace DistribuisciEsami
             this.punteggi = new Dictionary<decimal, List<int>>();
         }
 
-        internal void CalcolaRank()
+        public void CalcolaRank()
         {
             rank = new List<List<int>>();
             List<decimal> rankValue = GetRankValue();

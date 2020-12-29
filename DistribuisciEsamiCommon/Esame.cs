@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DistribuisciEsami
+namespace DistribuisciEsamiCommon
 {
     public class Esame
     {
