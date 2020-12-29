@@ -48,6 +48,7 @@
     <Compile Include="Esami.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punteggi.cs" />
+    <Compile Include="RispostaCompleta.cs" />
     <Compile Include="Soluzione.cs" />
   </ItemGroup>
   <ItemGroup>

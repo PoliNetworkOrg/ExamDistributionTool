@@ -17,7 +17,20 @@ namespace DistribuisciEsamiCommon
         public Esami(string file)
         {
             dictionary = new Dictionary<string, Esame>();
-            var jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(file);
+            object jObject = null;
+            try
+            {
+                jObject = Newtonsoft.Json.JsonConvert.DeserializeObject(file);
+            }
+            catch
+            {
+                ;
+            }
+
+            if (jObject == null)
+            {
+                return;
+            }
 
             if (jObject is Newtonsoft.Json.Linq.JArray ja)
             {
@@ -39,9 +52,14 @@ namespace DistribuisciEsamiCommon
             this.dictionary[nome] = esame;
         }
 
-        internal Esame GetExam(string x)
+        public Esame GetExam(string x)
         {
             return this.dictionary[x];
+        }
+
+        public Dictionary<string, Esame> GetEsami()
+        {
+            return dictionary;
         }
 
         private static int GetCfuFromJson(Newtonsoft.Json.Linq.JToken x)

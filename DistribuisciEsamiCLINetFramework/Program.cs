@@ -29,13 +29,51 @@ namespace DistribuisciEsami
                 }
                 else
                 {
-                    Main2(file);
+                    
+                    esami = new Esami(file);
+                    if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+                    {
+                        Console.WriteLine("There are no exams in that file! Is it formatted correctly?");
+                        return;
+                    }
+
+                    Tuple<RispostaCompleta, string> punteggi = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
+                    if (punteggi.Item1 != null)
+                    {
+                        MostraEsito(punteggi.Item1);
+                    }
+                    else
+                    {
+                        Console.WriteLine(punteggi.Item2);
+                    }
                     return;
                 }
             }
 
             Console.WriteLine("You have to pass the input file as an argument");
             return;
+        }
+
+        private static void MostraEsito(RispostaCompleta punteggi)
+        {
+            int latest = 0;
+            foreach (List<int> p in punteggi.punteggi.rank)
+            {
+                foreach (var p2 in p)
+                {
+                    Console.WriteLine(punteggi.soluzioni[p2].ToConsoleOutput(esami));
+                    Console.WriteLine(punteggi.soluzioni[p2].value);
+                    Console.WriteLine("\n");
+                    latest = p2;
+                }
+
+                Console.WriteLine(".");
+            }
+
+            /*
+            if (isGUI)
+                MessageBox.Show("The recommended solution is:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput(esami) + Environment.NewLine + "To view the other solutions, please read the console.");
+        */
         }
 
         /*
@@ -121,94 +159,8 @@ namespace DistribuisciEsami
 
         public static Esami esami = null;
 
-        private static void Main2(string file)
-        {
-            esami = new Esami(file);
-            if (esami == null || esami.IsEmpty()) {
-                Console.WriteLine("There are no exams");
-                return;
-            }
 
-            List<Soluzione> soluzioni = GetSoluzioni();
-            if (soluzioni == null || soluzioni.Count == 0) {
-                Console.WriteLine("No solutions!");
-                return;
-            }
 
-            for (int i = 0; i < soluzioni.Count; i++) {
-                soluzioni[i].CalcolaPunteggio(esami);
-            }
 
-            Punteggi punteggi = CalcolaPunteggi(soluzioni);
-
-            ;
-            int latest = 0;
-            foreach (List<int> p in punteggi.rank) {
-                foreach (var p2 in p) {
-                    Console.WriteLine(soluzioni[p2].ToConsoleOutput(esami));
-                    Console.WriteLine(soluzioni[p2].value);
-                    Console.WriteLine("\n");
-                    latest = p2;
-                }
-
-                Console.WriteLine(".");
-            }
-
-            /*
-            if (isGUI)
-                MessageBox.Show("The recommended solution is:" + Environment.NewLine + soluzioni[latest].ToConsoleOutput(esami) + Environment.NewLine + "To view the other solutions, please read the console.");
-        */
-        }
-
-        private static Punteggi CalcolaPunteggi(List<Soluzione> soluzioni)
-        {
-            Punteggi punteggi = new Punteggi();
-            for (int i = 0; i < soluzioni.Count; i++) {
-                decimal value = soluzioni[i].value;
-                if (!punteggi.punteggi.ContainsKey(value)) {
-                    punteggi.punteggi[value] = new List<int>() { i };
-                }
-                else if (punteggi.punteggi[value] == null) {
-                    punteggi.punteggi[value] = new List<int>() { i };
-                }
-                else {
-                    punteggi.punteggi[value].Add(i);
-                }
-            }
-
-            punteggi.CalcolaRank();
-
-            return punteggi;
-        }
-
-        private static List<Soluzione> GetSoluzioni()
-        {
-            List<string> keys = esami.GetKeys();
-
-            List<Soluzione> r = new List<Soluzione>();
-            r.AddRange(GetSoluzioni2(0, keys, new Soluzione()));
-            return r;
-        }
-
-        private static List<Soluzione> GetSoluzioni2(int v, List<string> keys, Soluzione soluzione)
-        {
-            if (v >= keys.Count) {
-                return null;
-            }
-            List<DateTime> dateTimes = esami.GetDateTimes(keys[v]);
-            List<Soluzione> r = new List<Soluzione>();
-            foreach (var d in dateTimes) {
-                Soluzione s1 = soluzione.Clone();
-                s1.dictionary[keys[v]] = d;
-                var r2 = GetSoluzioni2(v + 1, keys, s1);
-                if (r2 == null || r2.Count == 0) {
-                    r.Add(s1);
-                }
-                else {
-                    r.AddRange(r2);
-                }
-            }
-            return r;
-        }
     }
 }

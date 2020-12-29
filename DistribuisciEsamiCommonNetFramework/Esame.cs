@@ -15,5 +15,10 @@ namespace DistribuisciEsamiCommon
             this.dateTimes = date;
             this.cfu = cfu;
         }
+
+        public string ToStringListBoxGUI()
+        {
+            return this.nome + "\t\t" + this.cfu.ToString();
+        }
     }
 }
