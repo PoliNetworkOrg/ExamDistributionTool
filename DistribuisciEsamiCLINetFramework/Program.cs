@@ -9,21 +9,31 @@ namespace DistribuisciEsami
     {
         private static void Main(string[] args)
         {
-            if (args.Length > 0)
-            {
-                string file = null;
+            string file = null;
+            if (args.Length > 0) {
+                file = args[0];
+            }
+                
+            else {
+                Console.WriteLine("No filepath was passed as argument. Please input the path to the file.");
+                file = Console.ReadLine().Replace("\"","");
+            }
+
+
+                string filecontent = null;
                 try
                 {
-                    file = File.ReadAllText(args[0]);
+                    filecontent = File.ReadAllText(file);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    ;
+                    Console.WriteLine(ex.Message);
                 }
 
-                if (string.IsNullOrEmpty(file))
+                if (string.IsNullOrEmpty(filecontent))
                 {
                     Console.WriteLine("There was an error reading the file.");
+                    Console.ReadLine();
                     return;
                 }
                 else
@@ -31,7 +41,7 @@ namespace DistribuisciEsami
                     esami = null;
                     try
                     {
-                        esami = new Esami(file);
+                        esami = new Esami(filecontent);
                     }
                     catch
                     {
@@ -40,10 +50,69 @@ namespace DistribuisciEsami
 
                     if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
                     {
-                        Console.WriteLine("There are no exams in that file! Is it formatted correctly?");
-                        return;
+                        //The file isn't formatted like the readme says it should be. Let's see if it's copied from the exams page.
+                        List<string> JSON = new List<string>();
+                        JSON.Add("[");
+                        string[] lines = File.ReadAllLines(file);
+                        foreach (string line in lines) {
+                            if (line.Contains("-")) {
+                                if (Array.IndexOf(lines, line) + 1 == lines.Length)
+                                    break; //This line is a new subject, but there's no lines after this so there can't be any dates.
+                                else {
+                                    if (lines[Array.IndexOf(lines, line) + 1].IndexOf("/") != 2)
+                                        continue; //Is the next line NOT a date? Then keep going. This subject has no listed dates.
+                                }
+                                JSON.Add("{");
+                                string subjectname = line.Substring(0, line.IndexOf("-")).Trim();
+                                JSON.Add("\"name\":\"" + subjectname + "\",");
+                                string dateline = "\"date\":[";
+                                string nextline = lines[Array.IndexOf(lines, line) + 1];
+                                while (nextline.IndexOf("/") == 2) {
+                                    //So long as the next line is a date
+                                    dateline += "\"" + Convert.ToDateTime(nextline.Substring(0, nextline.IndexOf(":")).Replace("/", "-")).ToString("yyyy-MM-dd") + "\",";
+                                    nextline = lines[Array.IndexOf(lines, nextline) + 1];
+
+                                }
+                                dateline = (dateline + "\"],").Replace("\",\"],", "\"],");  //2lazy to fix it properly
+                                JSON.Add(dateline);
+                                //MessageBox.Show(dateline);
+                                int cfunum = 0;
+                                string tmp = "";
+                                Console.WriteLine("How many CFUs is " + subjectname + " worth?");
+                                tmp = Console.ReadLine();
+                                while (tmp != "" && !int.TryParse(tmp, out cfunum)) {
+                                    Console.WriteLine("The only accepted values are numbers or nothing at all. Please try again.");
+                                    Console.WriteLine("How many CFUs is " + Environment.NewLine + subjectname + " worth?");
+                                    tmp = Console.ReadLine();
+                                }
+
+                                if (tmp != "")
+                                    JSON.Add("\"cfu\":\"" + cfunum + "\"");
+                                else
+                                    JSON.Add("\"cfu\":\"" + "\"");
+
+                                JSON.Add("},");
+                            }
+                        }
+                        JSON.Add("]");
+                        JSON[JSON.Count - 2] = "}";    //Remove the comma from the last closed curly bracket
+                        filecontent = String.Join(Environment.NewLine, JSON);
+
+                        try {
+                            esami = new Esami(filecontent);
+                        }
+                        catch {
+                            ;
+                        }
+
+                        if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0) {
+                            Console.WriteLine("No exams found in that file. Is it formatted correctly?");
+                            return;
+                        }
                     }
 
+                    Console.WriteLine();
+                    Console.WriteLine("Possible solutions:");
                     Tuple<RispostaCompleta, string> punteggi = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
                     if (punteggi.Item1 != null)
                     {
@@ -53,13 +122,12 @@ namespace DistribuisciEsami
                     {
                         Console.WriteLine(punteggi.Item2);
                     }
-                    return;
+
+                Console.ReadLine();
+                return;
                 }
             }
 
-            Console.WriteLine("You have to pass the input file as an argument");
-            return;
-        }
 
         private static void MostraEsito(RispostaCompleta punteggi)
         {
