@@ -35,6 +35,7 @@ namespace DistribuisciEsamiGUI
             // 
             // OK
             // 
+            this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OK.Location = new System.Drawing.Point(334, 47);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
@@ -56,6 +57,7 @@ namespace DistribuisciEsamiGUI
             // 
             // InputText
             // 
+            this.InputText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.InputText.Location = new System.Drawing.Point(11, 47);
             this.InputText.Name = "InputText";
             this.InputText.Size = new System.Drawing.Size(293, 20);
@@ -69,7 +71,6 @@ namespace DistribuisciEsamiGUI
             this.Controls.Add(this.InputText);
             this.Controls.Add(this.Label1);
             this.Controls.Add(this.OK);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "InputForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Input";

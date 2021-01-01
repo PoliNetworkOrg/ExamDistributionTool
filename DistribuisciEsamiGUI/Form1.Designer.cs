@@ -64,6 +64,7 @@ namespace DistribuisciEsamiGUI
             // 
             // listView1
             // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ExamName,
             this.CFU});
@@ -85,6 +86,7 @@ namespace DistribuisciEsamiGUI
             // 
             // SolutionsView
             // 
+            this.SolutionsView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SolutionsView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ExamName2,
             this.CFU2,
@@ -138,7 +140,6 @@ namespace DistribuisciEsamiGUI
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "ExamDistribution";
             this.Load += new System.EventHandler(this.Form1_Load);
