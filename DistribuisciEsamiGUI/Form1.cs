@@ -50,75 +50,43 @@ namespace DistribuisciEsamiGUI
                     return;
                 }
 
-                esami = null;
-                try
-                {
-                    esami = new Esami(filecontent);
-                }
-                catch
-                {
-                    ;
-                }
+                esami = new Esami();
 
-                if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
-                {
-                    //The file isn't formatted like the readme says it should be. Let's see if it's copied from the exams page.
-                    List<string> JSON = new List<string>();
-                    JSON.Add("[");
-                    string[] lines = File.ReadAllLines(file);
-                    foreach (string line in lines) {
-                        if (line.Contains("-")) {
-                            if (Array.IndexOf(lines, line) + 1 == lines.Length)
-                                break; //This line is a new subject, but there's no lines after this so there can't be any dates.
-                            else {
-                                if (lines[Array.IndexOf(lines, line) + 1].IndexOf("/") != 2)
-                                    continue; //Is the next line NOT a date? Then keep going. This subject has no listed dates.
-                            }
-                            JSON.Add("{");
-                            string subjectname = line.Substring(0, line.IndexOf("-")).Trim();
-                            JSON.Add("\"name\":\"" + subjectname + "\",");
-                            string dateline = "\"date\":[";
-                            string nextline = lines[Array.IndexOf(lines, line) + 1];
-                            while (nextline.IndexOf("/") == 2) {
-                                //So long as the next line is a date
-                                dateline += "\"" + Convert.ToDateTime(nextline.Substring(0, nextline.IndexOf(":")).Replace("/", "-")).ToString("yyyy-MM-dd") + "\",";
-                                nextline = lines[Array.IndexOf(lines, nextline) + 1];
-                                
-                            }
-                            dateline = (dateline + "\"],").Replace("\",\"],", "\"],");  //2lazy to fix it properly
-                            JSON.Add(dateline);        
-                            //MessageBox.Show(dateline);
-                            int cfunum = 0;
-                            string tmp = "";
-                                InputForm inpFrm = new InputForm();
-                                inpFrm.Label1.Text = "How many CFUs is " + Environment.NewLine + subjectname + " worth?";
-                                inpFrm.ShowDialog();
-                                tmp = inpFrm.InputText.Text;
-                                int.TryParse(tmp, out cfunum);
-                            if (tmp != "")
-                                JSON.Add("\"cfu\":\"" + cfunum + "\"");
-                            else
-                                JSON.Add("\"cfu\":\"" + "\"");
+                object obj = esami.CheckText(filecontent, File.ReadAllLines(file));
+                if (!(obj is Esami)) {
 
-                            JSON.Add("},");
+                    List<string> Lines = (List<string>)obj;
+                    string plchlind = "[CFUNUM-PLACEHOLDER-";
+
+                    InputForm inpFrm = new InputForm();
+                    for (int i = 0; i < Lines.Count; i++) {
+                        string x = Lines[i];
+                        if (x.Contains(plchlind)) {
+                            string subjectname = x.Substring(x.IndexOf(plchlind)+plchlind.Length, x.IndexOf("]\"") - x.IndexOf(plchlind) - plchlind.Length);
+                            inpFrm.Label1.Text = "How many CFUs is " + Environment.NewLine + subjectname + " worth?";
+                            inpFrm.InputText.Text = "";
+                            inpFrm.ShowDialog();
+                            Lines[i] = x.Replace(plchlind + subjectname + "]", inpFrm.InputText.Text);
                         }
                     }
-                    JSON.Add("]");
-                    JSON[JSON.Count - 2] = "}";    //Remove the comma from the last closed curly bracket
-                    filecontent = String.Join(Environment.NewLine, JSON);
 
                     try {
-                        esami = new Esami(filecontent);
+                        esami = new Esami(String.Join(Environment.NewLine, Lines));
                     }
                     catch {
                         ;
                     }
 
                     if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0) {
-                        MessageBox.Show("No exams found in that file. Is it formatted correctly?");
+                        Console.WriteLine("No exams found in that file. Is it formatted correctly?");
                         return;
-                    }   
+                    }
                 }
+                else
+                    esami = (Esami)obj;
+
+
+
                 var rispostaCompleta = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
                 if (rispostaCompleta.Item1 != null)
                 {
@@ -173,7 +141,6 @@ namespace DistribuisciEsamiGUI
 
             }
 
-            //textBox1.Lines = lines.ToArray();
         }
     }
     class WeightSort : IComparer
@@ -183,17 +150,6 @@ namespace DistribuisciEsamiGUI
             float z = float.Parse(((ListViewItem)x).SubItems[3].Text);
             float w = float.Parse(((ListViewItem)y).SubItems[3].Text);
 
-            /*MessageBox.Show(((ListViewItem)x).Text + " - " + ((ListViewItem)x).SubItems.Count.ToString());
-            MessageBox.Show(((ListViewItem)y).Text + " - " + ((ListViewItem)y).SubItems.Count.ToString());
-
-            if (((ListViewItem)x).SubItems.Count < 4)
-                z = 9999999999;
-            else if (!float.TryParse(((ListViewItem)x).SubItems[2].Text, out z))
-                z = 9999999999;
-
-
-            if (!float.TryParse(((ListViewItem)y).SubItems[2].Text, out w))
-                w = 9999999999;*/
 
             return w.CompareTo(z);
         }
