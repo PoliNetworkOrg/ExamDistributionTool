@@ -9,91 +9,115 @@ namespace DistribuisciEsami
     {
         private static void Main(string[] args)
         {
-            string file = null;
-            if (args.Length > 0) {
+            string file;
+            if (args.Length > 0)
+            {
                 file = args[0];
             }
-
-            else {
+            else
+            {
                 Console.WriteLine("No filepath was passed as argument. Please input the path to the file.");
                 file = Console.ReadLine().Replace("\"", "");
             }
 
-
             string filecontent = null;
-            try {
+            try
+            {
                 filecontent = File.ReadAllText(file);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
             }
 
-            if (string.IsNullOrEmpty(filecontent)) {
+            if (string.IsNullOrEmpty(filecontent))
+            {
                 Console.WriteLine("There was an error reading the file.");
                 Console.ReadLine();
                 return;
             }
-            else {
-                //We have the content, let's try this.
-                esami = new Esami();
 
-                object obj = esami.CheckText(filecontent, File.ReadAllLines(file));
-                if (!(obj is Esami)) {
-
-                    List<string> Lines = (List<string>)obj;
-                    string plchlind = "[CFUNUM-PLACEHOLDER-";
-
-                    for (int i = 0;i < Lines.Count;i++) {
-                        string x = Lines[i];
-                        if (x.Contains(plchlind)) {
-                            string subjectname = x.Substring(x.IndexOf(plchlind)+plchlind.Length,x.IndexOf("]\"")-x.IndexOf(plchlind)- plchlind.Length);
-                            Console.WriteLine("How many CFUs is " + subjectname + " worth?");
-                            string tmp = Console.ReadLine();
-                            while (tmp != "" && !int.TryParse(tmp, out _)) {
-                                Console.WriteLine("The only accepted values are numbers or nothing at all. Please try again.");
-                                Console.WriteLine("How many CFUs is " + Environment.NewLine + subjectname + " worth?");
-                                tmp = Console.ReadLine();
-                            }
-                            Lines[i] = x.Replace(plchlind + subjectname + "]", tmp);
-                        }
-                    }
-
-                    try {
-                        esami = new Esami(String.Join(Environment.NewLine, Lines));
-                    }
-                    catch {
-                        ;
-                    }
-
-                    if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0) {
-                        Console.WriteLine("No exams found in that file. Is it formatted correctly?");
-                        return;
-                    }
-                }
-                else
-                    esami = (Esami)obj;
-
-
-                Console.WriteLine();
-                Console.WriteLine("Possible solutions:");
-                Tuple<RispostaCompleta, string> punteggi = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
-                if (punteggi.Item1 != null) {
-                    MostraEsito(punteggi.Item1);
-                }
-                else {
-                    Console.WriteLine(punteggi.Item2);
-                }
-
-                Console.ReadLine();
+            //We have the content, let's try this.
+            esami = GetEsamiFromFile(filecontent, file);
+            if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+            {
                 return;
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Possible solutions:");
+            Tuple<RispostaCompleta, string> punteggi = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
+            if (punteggi.Item1 != null)
+            {
+                MostraEsito(punteggi.Item1);
+            }
+            else
+            {
+                Console.WriteLine(punteggi.Item2);
+            }
+
+            Console.ReadLine();
+            return;
         }
 
+        private static Esami GetEsamiFromFile(string filecontent, string file)
+        {
+            Esami esami = new Esami();
+
+            EsamiFromFile obj = esami.CheckText(filecontent, File.ReadAllLines(file));
+            if (obj == null || obj.IsEmpty())
+            {
+                return null;
+            }
+
+            if (obj.AlreadyContaisExams())
+                return obj.GetExams();
+
+            List<string> Lines = obj.GetLines();
+            string plchlind = "[CFUNUM-PLACEHOLDER-";
+
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                string x = Lines[i];
+                if (x.Contains(plchlind))
+                {
+                    string subjectname = x.Substring(x.IndexOf(plchlind) + plchlind.Length, x.IndexOf("]\"") - x.IndexOf(plchlind) - plchlind.Length);
+                    Console.WriteLine("How many CFUs is " + subjectname + " worth?");
+                    string tmp = Console.ReadLine();
+                    while (tmp != "" && !int.TryParse(tmp, out _))
+                    {
+                        Console.WriteLine("The only accepted values are numbers or nothing at all. Please try again.");
+                        Console.WriteLine("How many CFUs is " + Environment.NewLine + subjectname + " worth?");
+                        tmp = Console.ReadLine();
+                    }
+                    Lines[i] = x.Replace(plchlind + subjectname + "]", tmp);
+                }
+            }
+
+            try
+            {
+                esami = new Esami(String.Join(Environment.NewLine, Lines));
+            }
+            catch
+            {
+                ;
+            }
+
+            if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+            {
+                Console.WriteLine("No exams found in that file. Is it formatted correctly?");
+                return null;
+            }
+
+            return esami;
+        }
 
         private static void MostraEsito(RispostaCompleta punteggi)
         {
-            foreach (List<int> p in punteggi.punteggi.rank) {
-                foreach (var p2 in p) {
+            foreach (List<int> p in punteggi.punteggi.rank)
+            {
+                foreach (var p2 in p)
+                {
                     string s2 = EsitoCLI_Esami(punteggi.soluzioni[p2].ToConsoleOutput(esami));
                     Console.WriteLine(s2);
                     Console.WriteLine(punteggi.soluzioni[p2].value);
@@ -111,7 +135,8 @@ namespace DistribuisciEsami
 
             string r = "";
 
-            foreach (string x in lists) {
+            foreach (string x in lists)
+            {
                 r += x;
                 r += "\n";
             }
