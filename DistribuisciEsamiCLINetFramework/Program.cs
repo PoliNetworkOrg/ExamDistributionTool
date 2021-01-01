@@ -65,6 +65,11 @@ namespace DistribuisciEsami
             Esami esami = new Esami();
 
             EsamiFromFile obj = esami.CheckText(filecontent, File.ReadAllLines(file));
+            if (obj == null || obj.IsEmpty())
+            {
+                return null;
+            }
+
             if (obj.AlreadyContaisExams())
                 return obj.GetExams();
 

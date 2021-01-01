@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DistribuisciEsamiCommon
 {
@@ -30,6 +31,11 @@ namespace DistribuisciEsamiCommon
         public List<string> GetLines()
         {
             return this.jSON;
+        }
+
+        public bool IsEmpty()
+        {
+            return (this.esami == null || this.esami.GetEsami() == null || this.esami.GetEsami().Values.Count == 0) && (this.jSON == null || this.jSON.Count == 0);
         }
     }
 }
