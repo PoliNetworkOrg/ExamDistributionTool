@@ -7,8 +7,6 @@ namespace DistribuisciEsamiCommon
     {
         private readonly Dictionary<string, Esame> dictionary;
 
-
-
         public Esami()
         {
             dictionary = new Dictionary<string, Esame>();
@@ -61,26 +59,34 @@ namespace DistribuisciEsamiCommon
         {
             return dictionary;
         }
-        public object CheckText(string filecontent, string[] lines)
-        {
 
+        public EsamiFromFile CheckText(string filecontent, string[] lines)
+        {
             Esami esami = null;
-            try {
+            try
+            {
                 esami = new Esami(filecontent);
             }
-            catch {
+            catch
+            {
                 ;
             }
 
-            if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0) {
+            if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+            {
                 //The file isn't formatted like the readme says it should be. Let's see if it's copied from the exams page.
-                List<string> JSON = new List<string>();
-                JSON.Add("[");
-                foreach (string line in lines) {
-                    if (line.Contains("-")) {
+                List<string> JSON = new List<string>
+                {
+                    "["
+                };
+                foreach (string line in lines)
+                {
+                    if (line.Contains("-"))
+                    {
                         if (Array.IndexOf(lines, line) + 1 == lines.Length)
                             break; //This line is a new subject, but there's no lines after this so there can't be any dates.
-                        else {
+                        else
+                        {
                             if (lines[Array.IndexOf(lines, line) + 1].IndexOf("/") != 2)
                                 continue; //Is the next line NOT a date? Then keep going. This subject has no listed dates.
                         }
@@ -89,11 +95,11 @@ namespace DistribuisciEsamiCommon
                         JSON.Add("\"name\":\"" + subjectname + "\",");
                         string dateline = "\"date\":[";
                         string nextline = lines[Array.IndexOf(lines, line) + 1];
-                        while (nextline.IndexOf("/") == 2) {
+                        while (nextline.IndexOf("/") == 2)
+                        {
                             //So long as the next line is a date
                             dateline += "\"" + Convert.ToDateTime(nextline.Substring(0, nextline.IndexOf(":")).Replace("/", "-")).ToString("yyyy-MM-dd") + "\",";
                             nextline = lines[Array.IndexOf(lines, nextline) + 1];
-
                         }
                         dateline = (dateline + "\"],").Replace("\",\"],", "\"],");  //2lazy to fix it properly
                         JSON.Add(dateline);
@@ -106,12 +112,12 @@ namespace DistribuisciEsamiCommon
                 }
                 JSON.Add("]");
                 JSON[JSON.Count - 2] = "}";    //Remove the comma from the last closed curly bracket
-                return JSON;
-                
+                return new EsamiFromFile(JSON);
             }
             else
-                return esami;
+                return new EsamiFromFile(esami);
         }
+
         private static int GetCfuFromJson(Newtonsoft.Json.Linq.JToken x)
         {
             foreach (var x2 in x.Children())

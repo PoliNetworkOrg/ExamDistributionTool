@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Esame.cs" />
     <Compile Include="Esami.cs" />
+    <Compile Include="EsamiFromFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Punteggi.cs" />
     <Compile Include="RispostaCompleta.cs" />

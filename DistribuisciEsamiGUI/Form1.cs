@@ -1,8 +1,8 @@
 ﻿using DistribuisciEsamiCommon;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Collections;
 using System.Windows.Forms;
 
 namespace DistribuisciEsamiGUI
@@ -19,9 +19,9 @@ namespace DistribuisciEsamiGUI
         private void Form1_Load(object sender, EventArgs e)
         {
             listView1.Columns[0].Width = listView1.Width / 3 * 2;
-            listView1.Columns[1].Width = listView1.Width - listView1.Columns[0].Width -4;
+            listView1.Columns[1].Width = listView1.Width - listView1.Columns[0].Width - 4;
 
-            SolutionsView.Columns[0].Width = SolutionsView.Width - SolutionsView.Width / 6 - SolutionsView.Width / 4 -4 - SystemInformation.VerticalScrollBarWidth;
+            SolutionsView.Columns[0].Width = SolutionsView.Width - SolutionsView.Width / 6 - SolutionsView.Width / 4 - 4 - SystemInformation.VerticalScrollBarWidth;
             SolutionsView.Columns[1].Width = SolutionsView.Width / 6;
             SolutionsView.Columns[2].Width = SolutionsView.Width / 4;
             SolutionsView.ListViewItemSorter = new WeightSort();
@@ -50,42 +50,11 @@ namespace DistribuisciEsamiGUI
                     return;
                 }
 
-                esami = new Esami();
-
-                object obj = esami.CheckText(filecontent, File.ReadAllLines(file));
-                if (!(obj is Esami)) {
-
-                    List<string> Lines = (List<string>)obj;
-                    string plchlind = "[CFUNUM-PLACEHOLDER-";
-
-                    InputForm inpFrm = new InputForm();
-                    for (int i = 0; i < Lines.Count; i++) {
-                        string x = Lines[i];
-                        if (x.Contains(plchlind)) {
-                            string subjectname = x.Substring(x.IndexOf(plchlind)+plchlind.Length, x.IndexOf("]\"") - x.IndexOf(plchlind) - plchlind.Length);
-                            inpFrm.Label1.Text = "How many CFUs is " + Environment.NewLine + subjectname + " worth?";
-                            inpFrm.InputText.Text = "";
-                            inpFrm.ShowDialog();
-                            Lines[i] = x.Replace(plchlind + subjectname + "]", inpFrm.InputText.Text);
-                        }
-                    }
-
-                    try {
-                        esami = new Esami(String.Join(Environment.NewLine, Lines));
-                    }
-                    catch {
-                        ;
-                    }
-
-                    if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0) {
-                        Console.WriteLine("No exams found in that file. Is it formatted correctly?");
-                        return;
-                    }
+                esami = GetEsamiFromFile(filecontent, file);
+                if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+                {
+                    return;
                 }
-                else
-                    esami = (Esami)obj;
-
-
 
                 var rispostaCompleta = DistribuisciEsamiCommon.RispostaCompleta.CalcolaRisposta(esami);
                 if (rispostaCompleta.Item1 != null)
@@ -99,6 +68,49 @@ namespace DistribuisciEsamiGUI
             }
         }
 
+        private Esami GetEsamiFromFile(string filecontent, string file)
+        {
+            Esami esami = new Esami();
+
+            EsamiFromFile obj = esami.CheckText(filecontent, File.ReadAllLines(file));
+            if (obj.AlreadyContaisExams())
+                return obj.GetExams();
+
+            List<string> Lines = obj.GetLines();
+            string plchlind = "[CFUNUM-PLACEHOLDER-";
+
+            InputForm inpFrm = new InputForm();
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                string x = Lines[i];
+                if (x.Contains(plchlind))
+                {
+                    string subjectname = x.Substring(x.IndexOf(plchlind) + plchlind.Length, x.IndexOf("]\"") - x.IndexOf(plchlind) - plchlind.Length);
+                    inpFrm.Label1.Text = "How many CFUs is " + Environment.NewLine + subjectname + " worth?";
+                    inpFrm.InputText.Text = "";
+                    inpFrm.ShowDialog();
+                    Lines[i] = x.Replace(plchlind + subjectname + "]", inpFrm.InputText.Text);
+                }
+            }
+
+            try
+            {
+                esami = new Esami(String.Join(Environment.NewLine, Lines));
+            }
+            catch
+            {
+                ;
+            }
+
+            if (esami == null || esami.GetEsami() == null || esami.GetEsami().Count == 0)
+            {
+                Console.WriteLine("No exams found in that file. Is it formatted correctly?");
+                return null;
+            }
+
+            return esami;
+        }
+
         private void MostraSoluzione(RispostaCompleta rispostaCompleta)
         {
             listView1.Items.Clear();
@@ -107,11 +119,10 @@ namespace DistribuisciEsamiGUI
             {
                 string s = "" + esami.GetExam(x).ToStringListBoxGUI();
 
-                ListViewItem newItem = new ListViewItem(s.Substring(0,s.IndexOf("\t")));
-                newItem.SubItems.Add(s.Substring(s.IndexOf("\t")+1, s.Length - s.IndexOf("\t")-1));
+                ListViewItem newItem = new ListViewItem(s.Substring(0, s.IndexOf("\t")));
+                newItem.SubItems.Add(s.Substring(s.IndexOf("\t") + 1, s.Length - s.IndexOf("\t") - 1));
                 listView1.Items.Add(newItem);
             }
-
 
             SolutionsView.Items.Clear();
 
@@ -123,7 +134,8 @@ namespace DistribuisciEsamiGUI
             {
                 foreach (var p2 in p)
                 {
-                    foreach (string x in rispostaCompleta.soluzioni[p2].ToConsoleOutput(esami)) {
+                    foreach (string x in rispostaCompleta.soluzioni[p2].ToConsoleOutput(esami))
+                    {
                         string[] exams = x.Split('\t');
                         ListViewItem newItem = new ListViewItem(exams[0]);
 
@@ -138,21 +150,18 @@ namespace DistribuisciEsamiGUI
                     NewEmpty.SubItems.Add(rispostaCompleta.soluzioni[p2].value.ToString()); //Ensure that it has the same weight as the other items
                     SolutionsView.Items.Add(NewEmpty);    //Add an empty separator item.
                 }
-
             }
-
         }
     }
-    class WeightSort : IComparer
+
+    internal class WeightSort : IComparer
     {
         public int Compare(object x, object y)
         {
             float z = float.Parse(((ListViewItem)x).SubItems[3].Text);
             float w = float.Parse(((ListViewItem)y).SubItems[3].Text);
 
-
             return w.CompareTo(z);
         }
     }
 }
-
