@@ -1,7 +1,9 @@
 # ExamDistributionTool
 
 ## Requirements
-.Net Framework 4.7 Required. https://www.microsoft.com/it-it/download/details.aspx?id=55167
+.Net Core 6 or upper is required. https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+
+## Description
 
 This tool has two modes of operation: command line and GUI.
 
